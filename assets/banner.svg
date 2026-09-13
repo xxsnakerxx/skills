@@ -13,6 +13,6 @@
   <circle cx="720" cy="40" r="120" fill="#1f6feb" opacity="0.12"/>
   <circle cx="80" cy="160" r="100" fill="#a371f7" opacity="0.10"/>
   <text x="48" y="88" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="700" fill="url(#accent)">skills</text>
-  <text x="48" y="126" font-family="system-ui,-apple-system,sans-serif" font-size="22" fill="#8b949e">git / PR workflow agent skills</text>
+  <text x="48" y="126" font-family="system-ui,-apple-system,sans-serif" font-size="22" fill="#8b949e">code review / PR workflow agent skills</text>
   <text x="48" y="154" font-family="ui-monospace,SFMono-Regular,monospace" font-size="16" fill="#484f58">npx skills add xxsnakerxx/skills</text>
 </svg>

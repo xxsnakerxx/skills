@@ -3,7 +3,7 @@
   "notGrouped": "bottom",
   "groupings": [
     {
-      "title": "Git workflow",
+      "title": "Code review",
       "description": "Turn a branch into a well-written PR and clear its review feedback one commit at a time.",
       "skills": ["create-pr", "review-fixes"]
     }
