@@ -1,0 +1,11 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Git workflow",
+      "description": "Turn a branch into a well-written PR and clear its review feedback one commit at a time.",
+      "skills": ["create-pr", "review-fixes"]
+    }
+  ]
+}
