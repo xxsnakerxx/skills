@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="180" viewBox="0 0 800 180">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1117"/>
+      <stop offset="1" stop-color="#161b22"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#58a6ff"/>
+      <stop offset="1" stop-color="#a371f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="180" rx="16" fill="url(#bg)"/>
+  <circle cx="720" cy="40" r="120" fill="#1f6feb" opacity="0.12"/>
+  <circle cx="80" cy="160" r="100" fill="#a371f7" opacity="0.10"/>
+  <text x="48" y="88" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="700" fill="url(#accent)">skills</text>
+  <text x="48" y="126" font-family="system-ui,-apple-system,sans-serif" font-size="22" fill="#8b949e">git / PR workflow agent skills</text>
+  <text x="48" y="154" font-family="ui-monospace,SFMono-Regular,monospace" font-size="16" fill="#484f58">npx skills add xxsnakerxx/skills</text>
+</svg>

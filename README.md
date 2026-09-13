@@ -1,16 +1,67 @@
-# skills
+<p align="center">
+  <img src="assets/banner.svg" alt="skills — git / PR workflow agent skills" width="720">
+</p>
+
+<p align="center">
+  <a href="https://skills.sh/xxsnakerxx/skills"><img src="https://skills.sh/b/xxsnakerxx/skills" alt="skills.sh"></a>
+  <a href="https://github.com/xxsnakerxx/skills/actions/workflows/validate.yml"><img src="https://github.com/xxsnakerxx/skills/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://github.com/xxsnakerxx/skills/stargazers"><img src="https://img.shields.io/github/stars/xxsnakerxx/skills" alt="GitHub stars"></a>
+</p>
 
 Agent skills for the git/PR workflow — turn a branch into a well-written PR,
 then clear its review feedback one commit at a time. Self-contained, work with
-any agent that supports `skills` (Claude Code, opencode, Codex, Cursor).
-
-[![skills.sh](https://skills.sh/b/xxsnakerxx/skills)](https://skills.sh/xxsnakerxx/skills)
+any agent that supports `skills`.
 
 ## Install
+
+The `skills` CLI installs into the agent directories it detects. Pick your
+agent, or install everywhere:
+
+<details open>
+<summary><b>All agents (auto-detect)</b></summary>
 
 ```bash
 npx skills@latest add xxsnakerxx/skills -s create-pr review-fixes
 ```
+
+</details>
+
+<details>
+<summary><b>Claude Code</b></summary>
+
+```bash
+npx skills@latest add xxsnakerxx/skills -s create-pr review-fixes -a claude-code
+```
+
+</details>
+
+<details>
+<summary><b>opencode</b></summary>
+
+```bash
+npx skills@latest add xxsnakerxx/skills -s create-pr review-fixes -a opencode
+```
+
+</details>
+
+<details>
+<summary><b>Codex</b></summary>
+
+```bash
+npx skills@latest add xxsnakerxx/skills -s create-pr review-fixes -a codex
+```
+
+</details>
+
+<details>
+<summary><b>Cursor</b></summary>
+
+```bash
+npx skills@latest add xxsnakerxx/skills -s create-pr review-fixes -a cursor
+```
+
+</details>
 
 Pick individual skills with `-s <name>`, or `-s '*'` for everything.
 
@@ -72,4 +123,5 @@ skill's directory so a partial install (`-s <name>`) is still self-contained.
 
 ## Contributing
 
-See [CLAUDE.md](CLAUDE.md) for the conventions these skills follow.
+See [CLAUDE.md](CLAUDE.md) for the conventions these skills follow. Frontmatter
+is validated in CI (`scripts/validate.sh`).
