@@ -74,40 +74,49 @@ Pick individual skills with `-s <name>`, or `-s '*'` for everything.
 
 ## What it produces
 
-Give `create-pr` a branch and it returns a draft, not a diff summary. From a
-branch `export-orders-csv` (9 files):
+### create-pr
 
-> **Title** — `Add CSV export to orders list`
->
-> Adds an "Export CSV" button to the orders list that downloads the current filtered view.
->
-> - The export respects the active filters rather than the full table, so what you see is what you download.
-> - Exports are capped at 10k rows; larger sets must use the API, since the UI paginates and would silently truncate.
-> - Dates render in the viewer's locale to match the on-screen list, not ISO 8601.
+Give it a branch and it returns a draft, not a diff summary. From
+`export-orders-csv` (9 files):
 
-No inventory of changed files, no "updated", no "refactored" — one sentence of
-user-visible effect, then the decisions a reviewer would actually challenge,
-budgeted to the diff size. It reads the project's merged PRs first and matches
-their conventions (ticket ids, template, title style).
+```text
+Title   Add CSV export to orders list
 
-Give `review-fixes` a PR with feedback and it returns a **fix-map**, not a
-stray pile of edits. From PR `1715` (GitLab is identical — MRs, `note`/`disc` handles):
+Adds an "Export CSV" button to the orders list that downloads the current
+filtered view.
 
-> ```
-> ## 🐛 Bugs
-> - [x] Guard empty `items` in Order.total    src/order.ts:42  [thread PRRT_kwDOA1b2C3]
-> - [ ] Round before summing, not after       src/order.ts:48  [thread PRRT_kwDOA1b2C4]
->
-> ## ⚠️ Data / comments
-> - [ ] Link `discount` doc to its DB column  src/order.ts:61  [thread PRRT_kwDOA1b2C5]
->
-> ## 💬 Nits / questions
-> - [ ] Rename `tmp` → `subtotal`             src/order.ts:44  [thread PRRT_kwDOA1b2C6]
-> ```
+- The export respects the active filters rather than the full table, so what
+  you see is what you download.
+- Exports are capped at 10k rows; larger sets must use the API, since the UI
+  paginates and would silently truncate.
+- Dates render in the viewer's locale to match the on-screen list, not ISO 8601.
+```
 
-Bugs first, one fix per commit, each item pinned to its `file:line` and the
-resolve handle for its thread. The doc is the source of truth: after `/clear`
-it resumes on the next unchecked box and ticks each item off as it's resolved.
+One sentence of user-visible effect, then the decisions a reviewer would
+actually challenge — no inventory of changed files, no "updated"/"refactored".
+It reads the project's merged PRs first and matches their conventions (ticket
+ids, template, title style).
+
+### review-fixes
+
+Give it a PR with feedback and it returns a **fix-map**, not a stray pile of
+edits. From PR `1715` (GitLab is identical — MRs, `note`/`disc` handles):
+
+```text
+## 🐛 Bugs
+- [x] Guard empty `items` in Order.total    src/order.ts:42  [thread PRRT_kwDOA1b2C3]
+- [ ] Round before summing, not after       src/order.ts:48  [thread PRRT_kwDOA1b2C4]
+
+## ⚠️ Data / comments
+- [ ] Link `discount` doc to its DB column  src/order.ts:61  [thread PRRT_kwDOA1b2C5]
+
+## 💬 Nits / questions
+- [ ] Rename `tmp` → `subtotal`             src/order.ts:44  [thread PRRT_kwDOA1b2C6]
+```
+
+Bugs first, one fix per commit, each item pinned to its `file:line` and resolve
+handle. The doc is the source of truth — after `/clear` it resumes on the next
+unchecked box and ticks each item off as it's resolved.
 
 ## Layout
 
