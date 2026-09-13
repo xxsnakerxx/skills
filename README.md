@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="skills — git / PR workflow agent skills" width="720">
+  <img src="assets/banner.svg" alt="skills — code review / PR workflow agent skills" width="720">
 </p>
 
 <p align="center">
