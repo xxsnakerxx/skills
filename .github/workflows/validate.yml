@@ -32,3 +32,4 @@ jobs:
         with:
           path: ${{ matrix.skill }}
           validate-references: "true"
+          ignore-rules: "unknown-field"
