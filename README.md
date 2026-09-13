@@ -70,7 +70,7 @@ Pick individual skills with `-s <name>`, or `-s '*'` for everything.
 | Skill | What it does |
 |-------|--------------|
 | [create-pr](skills/create-pr/SKILL.md) | Resolve the target branch, read the diff, draft a title + description that follows the project's own conventions, create the PR/MR after approval. |
-| [review-fixes](skills/review-fixes/SKILL.md) | Fetch review comments, build a resumable fix-map, and resolve them one commit at a time. |
+| [review-fixes](skills/review-fixes/SKILL.md) | Fetch review comments, build a resumable fix-map, and clear each thread — fix, or reply when no fix is needed, then resolve. |
 
 ## What it produces
 
@@ -115,8 +115,9 @@ edits. From PR `1715` (GitLab is identical — MRs, `note`/`disc` handles):
 ```
 
 Bugs first, one fix per commit, each item pinned to its `file:line` and resolve
-handle. The doc is the source of truth — after `/clear` it resumes on the next
-unchecked box and ticks each item off as it's resolved.
+handle. After each fix it resolves the thread — or, when no fix is needed,
+replies to the reviewer and resolves — then ticks the item. The doc is the
+source of truth — after `/clear` it resumes on the next unchecked box.
 
 ## Layout
 
