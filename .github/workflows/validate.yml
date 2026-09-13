@@ -6,9 +6,29 @@ on:
   pull_request:
 
 jobs:
-  validate:
+  discover:
     runs-on: ubuntu-latest
+    outputs:
+      skills: ${{ steps.find.outputs.skills }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Validate skills
-        run: ./scripts/validate.sh
+      - uses: actions/checkout@v5
+      - name: Find skill directories
+        id: find
+        run: |
+          skills=$(find skills -maxdepth 1 -mindepth 1 -type d | sort | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "skills=$skills" >> "$GITHUB_OUTPUT"
+
+  validate:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        skill: ${{ fromJson(needs.discover.outputs.skills) }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate ${{ matrix.skill }}
+        uses: Flash-Brew-Digital/validate-skill@v1
+        with:
+          path: ${{ matrix.skill }}
+          validate-references: "true"

@@ -134,4 +134,4 @@ skill's directory so a partial install (`-s <name>`) is still self-contained.
 ## Contributing
 
 See [CLAUDE.md](CLAUDE.md) for the conventions these skills follow. Frontmatter
-is validated in CI (`scripts/validate.sh`).
+is validated in CI against the [Agent Skills spec](https://agentskills.io/specification).
