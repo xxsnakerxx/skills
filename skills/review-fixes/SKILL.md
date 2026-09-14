@@ -64,16 +64,29 @@ Keep this block in sync with Step 3 — it is copied into the fix-map verbatim a
 
 Next unchecked item (bugs first), exactly one. Always start with **0**, then pick **1 or 2**, then always do **3 and 4**:
 
-0. **Verify the finding, then ask.** Read the code before touching it and establish, with
-   `file:line` evidence: the mechanism the reviewer describes is real; what actually changed to
-   cause it (`git show <base>:<file>`, `git log -p`); and the full blast radius — grep for _every_
-   call site or consumer, not just the ones the comment names. Then report what you found and
-   **ask whether to fix it**. Do not edit until the user answers.
-   - Reviewer wrong, stale, or already fixed → say so with the evidence and go to **2**.
-   - Their proposed fix unsound while the finding is real → say which part fails and propose yours.
+0. **Verify the finding, then ask.** A review comment is a _suggestion, not a fact_ — the premise
+   gets checked as hard as the conclusion; "the reviewer said so" is not evidence.
+   - **Diff against `<base>` first**, before judging anything (`git show <base>:<file>`,
+     `git log -p`). Behaviour identical on the base branch and in the MR → this MR did not
+     introduce it, and that is the first line of the report.
+   - Then establish, with `file:line` evidence: the mechanism the reviewer describes is real, and
+     the full blast radius — grep for _every_ call site or consumer, not just the ones the comment
+     names.
+   - **Shipped value is a design decision, not a bug.** If the behaviour already ships in prod,
+     decline without conceding the right to keep it; don't counter-offer a different value.
+   - Report in this shape (in the conversation's language), then **ask whether to fix it**. Do not
+     edit until the user answers:
+     > **Comment:** what the reviewer said, in your own words
+     > **Found:** facts with `file:line`, including the comparison against `<base>`
+     > **Verdict:** finding correct / incorrect / out of scope
+     > **Question:** fix it?
+   - Reviewer wrong, stale, or already fixed → say so with the evidence and go to **2**. Finding
+     real but their proposed fix unsound → say which part fails and propose yours.
 1. **Code fix needed:** make the change, follow project conventions (CLAUDE.md). After non-trivial edits run the project's typecheck/lint/formatter — whatever the repo defines (CLAUDE.md / package.json scripts / Makefile), not a hardcoded command. Print a prefixed commit message; **don't commit until asked**. When committing, stage only the fix's files — never `git add .`/`-A`; the fix-map (untracked) must not be committed.
    - If the bug has **>1 plausible fix** and you picked one, invoke `grilling` on it _before editing_ (if that skill isn't installed, challenge the choice yourself with two or three hard questions). Skip for mechanical fixes (stale comment, magic strings → constants, inline styles).
-2. **No fix needed** (declined/deferred nit, or reviewer mistaken): don't touch code — draft a short polite reply in the thread's language explaining why.
+2. **No fix needed** (declined/deferred nit, or reviewer mistaken): don't touch code — draft a short
+   polite reply in the thread's language explaining why. Don't promise a follow-up ticket for a
+   problem that isn't confirmed — that concedes the premise you just declined.
    - Before drafting a decline/design-answer, invoke `grilling` on your stance (if not installed, stress-test it yourself) — declining is highest-risk; make sure it survives being pushed on.
 3. **Resolve the thread** (commands: `reference.md` → **Resolve / reply**) — unless other items share it and are still open; say so instead of resolving. Sandbox-blocked → print, wait for confirmation before ticking. Resolved too early → reopen (`reference.md` → **Resolve / reply**).
 4. **Update the fix-map:** tick the item, note the commit/reply.
