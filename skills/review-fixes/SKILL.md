@@ -76,7 +76,7 @@ Next unchecked item (bugs first), exactly one. Always start with **0**, then pic
      decline without conceding the right to keep it; don't counter-offer a different value.
    - Report in this shape (in the conversation's language), then **ask whether to fix it**. Do not
      edit until the user answers:
-     > **Comment:** what the reviewer said, in your own words
+     > **Comment:** what the reviewer said, in your own words (item number if the comment bundles several)
      > **Found:** facts with `file:line`, including the comparison against `<base>`
      > **Verdict:** finding correct / incorrect / out of scope
      > **Question:** fix it?
@@ -86,7 +86,9 @@ Next unchecked item (bugs first), exactly one. Always start with **0**, then pic
    - If the bug has **>1 plausible fix** and you picked one, invoke `grilling` on it _before editing_ (if that skill isn't installed, challenge the choice yourself with two or three hard questions). Skip for mechanical fixes (stale comment, magic strings → constants, inline styles).
 2. **No fix needed** (declined/deferred nit, or reviewer mistaken): don't touch code — draft a short
    polite reply in the thread's language explaining why. Don't promise a follow-up ticket for a
-   problem that isn't confirmed — that concedes the premise you just declined.
+   problem that isn't confirmed — that concedes the premise you just declined. If the comment
+   bundled several numbered findings, open the reply with the item number(s) it addresses
+   (e.g. `Re item 2:`).
    - Before drafting a decline/design-answer, invoke `grilling` on your stance (if not installed, stress-test it yourself) — declining is highest-risk; make sure it survives being pushed on.
 3. **Resolve the thread** (commands: `reference.md` → **Resolve / reply**) — unless other items share it and are still open; say so instead of resolving. Sandbox-blocked → print, wait for confirmation before ticking. Resolved too early → reopen (`reference.md` → **Resolve / reply**).
 4. **Update the fix-map:** tick the item, note the commit/reply.
