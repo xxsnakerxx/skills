@@ -13,7 +13,7 @@ Fetch → map → fix one-by-one → resolve. Exact commands for each step live 
 ## Environment
 
 - Detect host + project from the remote, never hardcode. `git remote get-url origin`: host contains `gitlab` → `glab`; `github.com`/GH-Enterprise → `gh`. Project path is everything after the host (`git@host:group/repo.git` → `group/repo`).
-- Placeholders: `<PROJECT>` = URL-encoded project path (`/`→`%2F`); `<PATH>` = un-encoded; `<OWNER>/<REPO>` for GitHub; `<MR>` = MR/PR number.
+- Placeholders: `<PROJECT>` = URL-encoded project path (`/`→`%2F`); `<PATH>` = un-encoded; `<OWNER>/<REPO>` for GitHub; `<MR>` = MR/PR number; `<base>` = the target/base branch the MR merges into.
 - `glab`/`gh` may be blocked in a sandbox (network/TLS). Try the command once; if it fails for an environment reason, hand it to the user with the `!` prefix (opencode/Claude Code) and **wait for confirmation it ran**. Never assume a handed-off command succeeded — until its output arrives the step's status is _unknown_, and that is what goes in the fix-map and in what you tell the user.
 - **Hand off one command at a time.** Never chain `commit && resolve` (or any two steps) with `&&`: the second fires on the first's success, not on your intent, and a single reply can't tell you which half ran.
 - A sandbox breaks more than the network. `git commit` failing inside husky/lint-staged (`git stash create` → `Operation not permitted` on `.env`, an unreadable `server/`) is an environment failure, not a code failure — diagnose it, hand the commit over, and **never silently fall back to `--no-verify`**. Same for a repo-wide `lint`: lint only the changed files instead.
@@ -57,6 +57,8 @@ or the next session hunts for the file again.
 > - If no fix is needed (declined/deferred nit), draft a reply instead, then resolve.
 > - Never chain handed-off commands with `&&`; never report a handed-off command as done without its output.
 > - When done, tick `- [ ]`→`- [x]` and note the commit/reply. This doc is the source of truth — resumable after `/clear`.
+
+Keep this block in sync with Step 3 — it is copied into the fix-map verbatim and must not drift.
 
 ## Step 3 — Do ONE item, then stop
 
