@@ -62,11 +62,11 @@ or the next session hunts for the file again.
 
 Next unchecked item (bugs first), exactly one. Always start with **0**, then pick **1 or 2**, then always do **3 and 4**:
 
-0. **Verify the finding, then ask.** Read the code before touching it and establish, with file:line
-   evidence: the mechanism the reviewer describes is real; what actually changed to cause it (`git
-show main:<file>`, `git log -p`); and the full blast radius — grep for _every_ call site or
-   consumer, not just the ones the comment names. Then report what you found and **ask whether to
-   fix it**. Do not edit until the user answers.
+0. **Verify the finding, then ask.** Read the code before touching it and establish, with
+   `file:line` evidence: the mechanism the reviewer describes is real; what actually changed to
+   cause it (`git show <base>:<file>`, `git log -p`); and the full blast radius — grep for _every_
+   call site or consumer, not just the ones the comment names. Then report what you found and
+   **ask whether to fix it**. Do not edit until the user answers.
    - Reviewer wrong, stale, or already fixed → say so with the evidence and go to **2**.
    - Their proposed fix unsound while the finding is real → say which part fails and propose yours.
 1. **Code fix needed:** make the change, follow project conventions (CLAUDE.md). After non-trivial edits run the project's typecheck/lint/formatter — whatever the repo defines (CLAUDE.md / package.json scripts / Makefile), not a hardcoded command. Print a prefixed commit message; **don't commit until asked**. When committing, stage only the fix's files — never `git add .`/`-A`; the fix-map (untracked) must not be committed.
