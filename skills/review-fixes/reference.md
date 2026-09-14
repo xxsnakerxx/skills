@@ -48,6 +48,12 @@ GitLab — resolve:
 glab api --method PUT "projects/<PROJECT>/merge_requests/<MR>/discussions/<discussion_id>/notes/<note_id>?resolved=true" > /dev/null 2>&1 && echo resolved
 ```
 
+GitLab — reopen a thread resolved too early (same call, `resolved=false`):
+
+```bash
+glab api --method PUT "projects/<PROJECT>/merge_requests/<MR>/discussions/<discussion_id>/notes/<note_id>?resolved=false" > /dev/null 2>&1 && echo unresolved
+```
+
 GitLab — reply (declined nit):
 
 ```bash

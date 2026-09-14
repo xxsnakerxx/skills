@@ -14,7 +14,9 @@ Fetch → map → fix one-by-one → resolve. Exact commands for each step live 
 
 - Detect host + project from the remote, never hardcode. `git remote get-url origin`: host contains `gitlab` → `glab`; `github.com`/GH-Enterprise → `gh`. Project path is everything after the host (`git@host:group/repo.git` → `group/repo`).
 - Placeholders: `<PROJECT>` = URL-encoded project path (`/`→`%2F`); `<PATH>` = un-encoded; `<OWNER>/<REPO>` for GitHub; `<MR>` = MR/PR number.
-- `glab`/`gh` may be blocked in a sandbox (network/TLS). Try the command once; if it fails for an environment reason, hand it to the user with the `!` prefix (opencode/Claude Code) and **wait for confirmation it ran**. Never assume a handed-off command succeeded.
+- `glab`/`gh` may be blocked in a sandbox (network/TLS). Try the command once; if it fails for an environment reason, hand it to the user with the `!` prefix (opencode/Claude Code) and **wait for confirmation it ran**. Never assume a handed-off command succeeded — until its output arrives the step's status is _unknown_, and that is what goes in the fix-map and in what you tell the user.
+- **Hand off one command at a time.** Never chain `commit && resolve` (or any two steps) with `&&`: the second fires on the first's success, not on your intent, and a single reply can't tell you which half ran.
+- A sandbox breaks more than the network. `git commit` failing inside husky/lint-staged (`git stash create` → `Operation not permitted` on `.env`, an unreadable `server/`) is an environment failure, not a code failure — diagnose it, hand the commit over, and **never silently fall back to `--no-verify`**. Same for a repo-wide `lint`: lint only the changed files instead.
 - Optional dependency: `grilling` — the `grilling` skill from `mattpocock/skills` (`npx skills add mattpocock/skills -s grilling`), used to stress-test a fix choice or a decline. Not `grill-me` / `grill-with-docs`.
 
 ## Step 0 — Resume check (first)
@@ -35,24 +37,43 @@ Redirect to a file so nothing truncates; read it after. Commands: `reference.md`
 
 Detect the **commit-message prefix** from the project — don't hardcode it. The ticket id is usually in the source branch name (`git branch --show-current`), the MR title, or recent commits; match the form the project uses (`[6832455]`, `ABC-123`, …). Record it at the top so it survives `/clear`. Ask only if it can't be inferred.
 
-`mkdir -p docs/review`, then create `docs/review/mr<MR>-fixes.md`: one checklist item per comment, grouped **🐛 Bugs** (first) / **⚠️ Data / comments** / **💬 Nits / questions**. Each item: short title, exact `file:line`, one-line problem summary, the resolve handle (`[note #id, disc <discussion_id>]` GitLab / `[thread <PRRT-id>]` GitHub), and a `- [ ]` box. Copy the **Workflow rules** block verbatim (self-contained after `/clear`). Present the grouped summary.
+One comment is not always one item: a reviewer often bundles several numbered findings in a single
+note. Split them into one item per finding, and record which items share a thread — a shared thread
+gets resolved only once **every** one of its items is done (see Workflow rules).
+
+Never copy the reviewer's `file:line` verbatim — they write from memory (`src/layout/Modal.svelte`
+for `src/components/Modal/Modal.svelte`). Resolve each path against the repo and store the real one,
+or the next session hunts for the file again.
+
+`mkdir -p docs/review`, then create `docs/review/mr<MR>-fixes.md`: one checklist item per finding, grouped **🐛 Bugs** (first) / **⚠️ Data / comments** / **💬 Nits / questions**. Each item: short title, exact `file:line`, one-line problem summary, the resolve handle (`[note #id, disc <discussion_id>]` GitLab / `[thread <PRRT-id>]` GitHub), and a `- [ ]` box. Copy the **Workflow rules** block verbatim (self-contained after `/clear`). Present the grouped summary.
 
 > ### Workflow rules
+>
 > - **One item per session**, then STOP — don't start the next.
+> - **Verify the finding against the code, then ask before editing.** A reviewer can be wrong or stale; no edit until the user says fix it.
 > - One fix = one commit; bugs first.
 > - **Never commit automatically** — propose a prefixed message, commit only on explicit request.
-> - After each fix, resolve its thread. If no fix is needed (declined/deferred nit), draft a reply instead, then resolve.
+> - After each fix, resolve its thread — but a thread shared by several items is resolved only when **all** of them are done.
+> - If no fix is needed (declined/deferred nit), draft a reply instead, then resolve.
+> - Never chain handed-off commands with `&&`; never report a handed-off command as done without its output.
 > - When done, tick `- [ ]`→`- [x]` and note the commit/reply. This doc is the source of truth — resumable after `/clear`.
 
 ## Step 3 — Do ONE item, then stop
 
-Next unchecked item (bugs first), exactly one. Pick **1 or 2**, then always do **3 and 4**:
+Next unchecked item (bugs first), exactly one. Always start with **0**, then pick **1 or 2**, then always do **3 and 4**:
 
+0. **Verify the finding, then ask.** Read the code before touching it and establish, with file:line
+   evidence: the mechanism the reviewer describes is real; what actually changed to cause it (`git
+show main:<file>`, `git log -p`); and the full blast radius — grep for _every_ call site or
+   consumer, not just the ones the comment names. Then report what you found and **ask whether to
+   fix it**. Do not edit until the user answers.
+   - Reviewer wrong, stale, or already fixed → say so with the evidence and go to **2**.
+   - Their proposed fix unsound while the finding is real → say which part fails and propose yours.
 1. **Code fix needed:** make the change, follow project conventions (CLAUDE.md). After non-trivial edits run the project's typecheck/lint/formatter — whatever the repo defines (CLAUDE.md / package.json scripts / Makefile), not a hardcoded command. Print a prefixed commit message; **don't commit until asked**. When committing, stage only the fix's files — never `git add .`/`-A`; the fix-map (untracked) must not be committed.
-   - If the bug has **>1 plausible fix** and you picked one, invoke `grilling` on it *before editing* (if that skill isn't installed, challenge the choice yourself with two or three hard questions). Skip for mechanical fixes (stale comment, magic strings → constants, inline styles).
+   - If the bug has **>1 plausible fix** and you picked one, invoke `grilling` on it _before editing_ (if that skill isn't installed, challenge the choice yourself with two or three hard questions). Skip for mechanical fixes (stale comment, magic strings → constants, inline styles).
 2. **No fix needed** (declined/deferred nit, or reviewer mistaken): don't touch code — draft a short polite reply in the thread's language explaining why.
    - Before drafting a decline/design-answer, invoke `grilling` on your stance (if not installed, stress-test it yourself) — declining is highest-risk; make sure it survives being pushed on.
-3. **Resolve the thread** (commands: `reference.md` → **Resolve / reply**). Sandbox-blocked → print, wait for confirmation before ticking.
+3. **Resolve the thread** (commands: `reference.md` → **Resolve / reply**) — unless other items share it and are still open; say so instead of resolving. Sandbox-blocked → print, wait for confirmation before ticking. Resolved too early → reopen (`reference.md` → **Resolve / reply**).
 4. **Update the fix-map:** tick the item, note the commit/reply.
 
 **Then STOP.** Tell the user to `/clear` and re-invoke `review-fixes docs/review/mr<MR>-fixes.md` for the next item.
